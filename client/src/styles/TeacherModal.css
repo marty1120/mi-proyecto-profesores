@@ -1,0 +1,150 @@
+.teacher-modal .modal-content {
+    background: white;
+    border-radius: 8px;
+}
+
+.teacher-modal .modal-header {
+    position: relative;
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+}
+
+.teacher-modal .modal-title {
+    position: relative;
+    width: 100%;
+    font-weight: bold;
+}
+
+.rank-number {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #333;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.teacher-info {
+    padding: 1rem;
+}
+
+.teacher-main {
+    margin-bottom: 2rem;
+}
+
+.teacher-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.teacher-details h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.skill-bar {
+    height: 8px;
+    margin-bottom: 1.5rem;
+    background-color: #eee;
+}
+
+.skill-bar .progress-bar {
+    border-radius: 4px;
+}
+
+.likes-section {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.skill-badge {
+    background-color: #e9ecef;
+    color: #666;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+
+/* Modo oscuro para el modal */
+.dark-mode .teacher-modal .modal-content {
+    background: var(--card-bg-dark); /* Fondo oscuro */
+    color: var(--text-dark); /* Texto claro */
+}
+
+.dark-mode .skill-badge {
+    background-color: rgba(255, 255, 255, 0.1); /* Badges oscuros */
+    color: var(--text-dark);
+}
+
+.dark-mode .skill-bar {
+    background-color: rgba(255, 255, 255, 0.1); /* Barras de progreso */
+}
+
+.dark-mode .teacher-details h4 {
+    color: var(--text-muted-dark);
+}
+
+/* Variantes de las barras de progreso */
+.skill-bar.bg-info .progress-bar {
+    background-color: #00bcd4; /* Barras de progreso en modo claro y oscuro */
+}
+
+.skill-bar.bg-success .progress-bar {
+    background-color: #4caf50;
+}
+
+.skill-bar.bg-warning .progress-bar {
+    background-color: #ff9800;
+}
+
+/* Explicación de categorías en modo claro */
+.category-explanation-container {
+    background-color: #f9f9f9; /* Color de fondo suave */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Título de la explicación */
+.category-explanation-container h5 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Párrafos de la explicación */
+.category-explanation-container p {
+    margin-bottom: 8px;
+    color: #666;
+}
+
+/* Modo oscuro para la explicación */
+.dark-mode .category-explanation-container {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo oscuro */
+    color: var(--text-dark); /* Texto claro */
+}
+
+.dark-mode .category-explanation-container h5 {
+    color: var(--text-dark); /* Título claro */
+}
+
+.dark-mode .category-explanation-container p {
+    color: var(--text-dark); /* Texto claro */
+}

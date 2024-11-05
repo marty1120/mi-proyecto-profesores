@@ -181,7 +181,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        MongoDB\Laravel\MongoDBServiceProvider::class,
+        App\Providers\MongoDBServiceProvider::class,
         /*
          * Package Service Providers...
          */

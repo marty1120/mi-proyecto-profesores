@@ -1,0 +1,69 @@
+
+.likes-history .card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.dark-mode .likes-history .card {
+  background: var(--card-bg-dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.likes-history .card:hover {
+  transform: translateY(-2px);
+}
+
+.likes-history .card-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+}
+
+.likes-history .list-group-item {
+  border-left: none;
+  border-right: none;
+  transition: background-color 0.3s ease;
+}
+
+.dark-mode .likes-history .list-group-item {
+  background: var(--card-bg-dark);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+}
+
+.likes-history .list-group-item:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.dark-mode .likes-history .list-group-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Animaciones */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.likes-history .list-group-item {
+  animation: slideIn 0.3s ease forwards;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .likes-history .card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .likes-history .badge {
+    margin-top: 0.5rem;
+  }
+}

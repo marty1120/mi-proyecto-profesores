@@ -1,0 +1,74 @@
+:root {
+    /* Colores primarios */
+    --primary-color: #4a90e2;
+    --primary-color-rgb: 74, 144, 226;
+    --secondary-color: #50c878;
+    --secondary-color-rgb: 80, 200, 120;
+  
+    /* Fondos */
+    --background-light: #f6f9fc;
+    --background-dark: #121212;
+    --card-bg-light: #ffffff;
+    --card-bg-dark: #1e1e1e;
+    
+    /* Texto */
+    --text-light: #2c3e50;
+    --text-dark: #e0e0e0;
+    --text-muted-light: #6c757d;
+    --text-muted-dark: #a0a0a0;
+    
+    /* Inputs */
+    --input-bg-light: #ffffff;
+    --input-bg-dark: #2c2c2c;
+    --input-border-light: #ced4da;
+    --input-border-dark: #404040;
+    
+    /* Estados */
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Bordes */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 15px;
+    --border-radius-xl: 25px;
+    
+    /* Espaciado */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    
+    /* Transiciones */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Z-index */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal: 1040;
+    --z-index-popover: 1050;
+    --z-index-tooltip: 1060;
+  }
+  
+  /* Modo oscuro */
+  .dark-mode {
+    --primary-color: #5c9ce6;
+    --secondary-color: #60d888;
+    --background: var(--background-dark);
+    --card-bg: var(--card-bg-dark);
+    --text: var(--text-dark);
+    --text-muted: var(--text-muted-dark);
+    --input-bg: var(--input-bg-dark);
+    --input-border: var(--input-border-dark);
+  }

@@ -1,0 +1,142 @@
+/* Estilos del contenedor de la lista de profesores */
+.teacher-list-container {
+  background: linear-gradient(135deg, #f6f9fc 0%, #f1f4f8 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.dark-mode .teacher-list-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+/* Header y título */
+.ranking-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.ranking-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: transparent;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.ranking-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  border-radius: 2px;
+}
+
+/* Grid de tarjetas */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.card-container {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+/* Controles de búsqueda */
+.search-input {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .search-input {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Mensajes de no resultados */
+.no-results {
+  text-align: center;
+  color: var(--text-muted-light);
+  margin-top: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .no-results {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-muted-dark);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.teacher-card {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .ranking-title {
+    font-size: 2rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+
+  .search-input {
+    margin-bottom: 1rem;
+  }
+}

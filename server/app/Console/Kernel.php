@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
     }
-
+    protected $commands = [
+        Commands\SetupMongoDB::class,
+    ];
     /**
      * Register the commands for the application.
      */
