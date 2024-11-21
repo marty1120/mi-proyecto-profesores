@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
+import { Navbar, Nav, Container, Dropdown, Modal, ListGroup } from 'react-bootstrap';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -10,17 +10,22 @@ import {
   FaBars, 
   FaTrophy, 
   FaUsers,
-  FaSignOutAlt 
+  FaSignOutAlt,
+  FaUserPlus,
+  FaCog,
+  FaComments,
+  FaShieldAlt
 } from 'react-icons/fa';
 
 const NavbarComponent = () => {
   const { darkMode, toggleDarkMode } = useTheme();
   const { user, logout } = useAuth();
   const [expanded, setExpanded] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
   const location = useLocation();
-
+  const isAdmin = user?.rol === 'administrador';
   const isActive = (path) => location.pathname === path;
-
+  
   const handleLogout = async () => {
     try {
       await logout();
@@ -28,6 +33,46 @@ const NavbarComponent = () => {
       console.error('Error al cerrar sesión:', error);
     }
   };
+
+  const AdminModal = () => (
+    <Modal
+      show={showAdminModal}
+      onHide={() => setShowAdminModal(false)}
+      centered
+      size="sm"
+    >
+      <Modal.Header closeButton className={darkMode ? 'bg-dark text-light' : ''}>
+        <Modal.Title className="d-flex align-items-center">
+          <FaShieldAlt className="me-2" />
+          Panel de Admin
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body className={`p-0 ${darkMode ? 'bg-dark' : ''}`}>
+        <ListGroup variant={darkMode ? 'dark' : ''}>
+          <ListGroup.Item 
+            as={Link} 
+            to="/admin/profesores/crear"
+            action
+            className="d-flex align-items-center py-3"
+            onClick={() => setShowAdminModal(false)}
+          >
+            <FaUserPlus className="me-3" />
+            Crear Profesor
+          </ListGroup.Item>
+          <ListGroup.Item 
+            as={Link} 
+            to="/admin/likes"
+            action
+            className="d-flex align-items-center py-3"
+            onClick={() => setShowAdminModal(false)}
+          >
+            <FaComments className="me-3" />
+            Moderar Likes
+          </ListGroup.Item>
+        </ListGroup>
+      </Modal.Body>
+    </Modal>
+  );
 
   return (
     <Navbar
@@ -46,7 +91,7 @@ const NavbarComponent = () => {
             className="brand-logo"
             alt="Logo"
           />
-          <span className="brand-text ms-2">Plataforma de Profesores</span>
+          <span className="brand-text ms-2">Teacher Connect</span>
         </Navbar.Brand>
 
         <Navbar.Toggle 
@@ -69,15 +114,30 @@ const NavbarComponent = () => {
             </Nav.Link>
 
             {user && (
-              <Nav.Link
-                as={Link}
-                to="/grupos"
-                className={`nav-link-custom ${isActive('/grupos') ? 'active' : ''}`}
-                onClick={() => setExpanded(false)}
-              >
-                <FaUsers className="me-1" />
-                Proyectos
-              </Nav.Link>
+              <>
+                <Nav.Link
+                  as={Link}
+                  to="/grupos"
+                  className={`nav-link-custom ${isActive('/grupos') ? 'active' : ''}`}
+                  onClick={() => setExpanded(false)}
+                >
+                  <FaUsers className="me-1" />
+                  Proyectos
+                </Nav.Link>
+
+                {isAdmin && (
+                  <Nav.Link
+                    className="nav-link-custom"
+                    onClick={() => {
+                      setShowAdminModal(true);
+                      setExpanded(false);
+                    }}
+                  >
+                    <FaCog className="me-1" />
+                    Admin
+                  </Nav.Link>
+                )}
+              </>
             )}
 
             <button
@@ -123,6 +183,8 @@ const NavbarComponent = () => {
           </Nav>
         </Navbar.Collapse>
       </Container>
+
+      <AdminModal />
     </Navbar>
   );
 };

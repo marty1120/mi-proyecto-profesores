@@ -1,141 +1,235 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import { FaUserTie, FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
-import TeacherLikeSystem from './TeacherLikeSystem';
-import { getTeacherById } from '../services/teacherService';
+import { Container, Row, Col, Card, Alert, Button } from 'react-bootstrap';
+import { motion } from 'framer-motion';
+import {
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaPhone,
+  FaChartLine,
+  FaUsers,
+  FaClock,
+  FaEdit,
+  FaUser,
+  FaHeart
+} from 'react-icons/fa';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import TeacherLikesHistoryTabs from './TeacherLikesHistoryTabs';
 import LoadingSpinner from './LoadingSpinner';
+import EditProfileModal from './EditProfileModal'; // Importamos el modal que vamos a reutilizar
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
+import * as teacherService from '../services/teacherService';
+import axios from '../services/axiosConfig';
+import '../styles/TeacherProfile.css';
 
 const TeacherProfile = () => {
   const { id } = useParams();
-  const [teacher, setTeacher] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [showEditModal, setShowEditModal] = useState(false);
   const { darkMode } = useTheme();
+  const { user } = useAuth();
+  const likesHistoryRef = useRef();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const loadTeacher = async () => {
-      try {
-        const response = await getTeacherById(id);
-        setTeacher(response.data);
-      } catch (error) {
-        console.error('Error fetching teacher data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Query para obtener datos del profesor y likes
+  const { data: teacher, isLoading, error } = useQuery({
+    queryKey: ['teacher', id],
+    queryFn: async () => {
+      const [teacherResponse, likesGiven, likesReceived] = await Promise.all([
+        teacherService.getTeacherById(id),
+        axios.get(`/profesores/${id}/likes-dados`),
+        axios.get(`/profesores/${id}/likes`)
+      ]);
 
-    loadTeacher();
-  }, [id]);
+      return {
+        ...teacherResponse.data,
+        likes_dados: likesGiven.data,
+        contador_likes: likesReceived.data.length,
+        likes_recibidos: likesReceived.data
+      };
+    }
+  });
 
-  if (loading) return <LoadingSpinner />;
-  if (!teacher) return <div>No se encontró el profesor</div>;
+  // Manejar likes
+  const handleLikeAdded = async (newLike) => {
+    queryClient.setQueryData(['teacher', id], (old) => ({
+      ...old,
+      contador_likes: (old?.contador_likes || 0) + 1
+    }));
+
+    if (likesHistoryRef.current) {
+      likesHistoryRef.current(newLike);
+    }
+  };
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <Alert variant="danger">{error.message}</Alert>;
+  if (!teacher) return <Alert variant="warning">No se encontró el profesor</Alert>;
 
   return (
     <Container className="py-5">
       <Row>
+        {/* Columna izquierda - Información principal */}
         <Col md={4}>
-          <Card className={darkMode ? 'bg-dark text-light' : ''}>
-            <Card.Img 
-              variant="top" 
-              src={teacher.photo || "/placeholder-teacher.jpg"} 
-              alt={teacher.name} 
-            />
-            <Card.Body>
-              <Card.Title className="h4">{teacher.name}</Card.Title>
-              <Card.Subtitle className="mb-3 text-muted">
-                {teacher.department}
-              </Card.Subtitle>
-              
-              <div className="mb-3">
-                <div className="d-flex align-items-center mb-2">
-                <FaCalendarAlt className="me-2" />
-                  <strong>Año de llegada:</strong>
-                  <span className="ms-2">{teacher.año_llegada || 'No disponible'}</span>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className={`profile-card mb-4 ${darkMode ? 'dark-mode' : ''}`}>
+              <div className="profile-image-container">
+                {teacher.foto ? (
+                  <img
+                    src={teacher.foto}
+                    alt={teacher.nombre}
+                    className="profile-image"
+                    onError={(e) => {
+                      e.target.src = "/placeholder-teacher.jpg";
+                    }}
+                  />
+                ) : (
+                  <div className="profile-image-placeholder">
+                    <FaUser size={60} className="text-secondary" />
+                  </div>
+                )}
+                <div className="profile-overlay">
+                  <h2 className="profile-name">{teacher.nombre}</h2>
+                  <span className="profile-department">{teacher.departamento}</span>
                 </div>
-                <div className="d-flex align-items-center mb-2">
-                  <FaMapMarkerAlt className="me-2" />
-                  <strong>Provincia:</strong>
-                  <span className="ms-2">{teacher.provincia || 'No disponible'}</span>
-                </div>
+                {user && teacher && String(user.id) === String(teacher.id) && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="edit-profile-btn"
+                    onClick={() => setShowEditModal(true)}
+                  >
+                    <FaEdit className="me-2" />
+                    Editar Perfil
+                  </Button>
+                )}
               </div>
-
-              <TeacherLikeSystem
-                teacherId={teacher.id}
-                teacherName={teacher.name}
-              />
-            </Card.Body>
-          </Card>
+              <Card.Body>
+                <div className="info-grid">
+                  <InfoItem
+                    icon={<FaCalendarAlt />}
+                    label="Año de llegada"
+                    value={teacher.año_llegada || 'No disponible'}
+                  />
+                  <InfoItem
+                    icon={<FaMapMarkerAlt />}
+                    label="Provincia"
+                    value={teacher.provincia || 'No disponible'}
+                  />
+                  {teacher.email && (
+                    <InfoItem
+                      icon={<FaEnvelope />}
+                      label="Email"
+                      value={teacher.email}
+                    />
+                  )}
+                  {teacher.telefono && (
+                    <InfoItem
+                      icon={<FaPhone />}
+                      label="Teléfono"
+                      value={teacher.telefono}
+                    />
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          </motion.div>
         </Col>
 
+        {/* Columna derecha - Estadísticas y contenido */}
         <Col md={8}>
-          <Card className={`mb-4 ${darkMode ? 'bg-dark text-light' : ''}`}>
-            <Card.Body>
-              <h2 className="mb-4">Información Profesional</h2>
-              
-              <div className="mb-4">
-                <h5>Habilidades Destacadas</h5>
-                <div className="d-flex flex-wrap gap-2">
-                  {teacher.skills?.map((skill, index) => (
-                    <span key={index} className="badge bg-primary">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
+          <Row>
+            {/* Tarjetas de Estadísticas */}
+            <Col xs={12}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <Card className={`stats-card mb-4 ${darkMode ? 'dark-mode' : ''}`}>
+                  <Card.Body>
+                    <div className="stats-grid">
+                      <StatItem
+                        icon={<FaChartLine />}
+                        value={teacher.contador_likes || 0}
+                        label="Likes Recibidos"
+                        color="primary"
+                      />
+                      <StatItem
+                        icon={<FaHeart />}
+                        value={teacher.likes_dados?.length || 0}
+                        label="Likes Dados"
+                        color="success"
+                      />
+                      <StatItem
+                        icon={<FaClock />}
+                        value={teacher.año_llegada ? new Date().getFullYear() - teacher.año_llegada : 'N/A'}
+                        label="Años Experiencia"
+                        color="info"
+                      />
+                    </div>
+                  </Card.Body>
+                </Card>
+              </motion.div>
+            </Col>
 
-              <div className="mb-4">
-                <h5>Descripción</h5>
-                <p>{teacher.description || 'No hay descripción disponible.'}</p>
-              </div>
-
-              <div className="mb-4">
-                <h5>Estadísticas</h5>
-                <Row className="g-3">
-                  <Col sm={6} md={4}>
-                    <div className="border rounded p-3 text-center">
-                      <h6>Total Likes</h6>
-                      <div className="h4 mb-0">{teacher.likes || 0}</div>
-                    </div>
-                  </Col>
-                  <Col sm={6} md={4}>
-                    <div className="border rounded p-3 text-center">
-                      <h6>Año de Llegada</h6>
-                      <div className="h4 mb-0">{teacher.año_llegada || 'N/A'}</div>
-                    </div>
-                  </Col>
-                  <Col sm={6} md={4}>
-                    <div className="border rounded p-3 text-center">
-                      <h6>Proyectos</h6>
-                      <div className="h4 mb-0">{teacher.projects?.length || 0}</div>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-            </Card.Body>
-          </Card>
-
-          <Card className={darkMode ? 'bg-dark text-light' : ''}>
-            <Card.Body>
-              <h5 className="mb-3">Historial de Actividad</h5>
-              <div className="timeline">
-                {teacher.activity_history?.map((activity, index) => (
-                  <div key={index} className="timeline-item">
-                    <div className="timeline-date">
-                      {new Date(activity.date).toLocaleDateString()}
-                    </div>
-                    <div className="timeline-content">
-                      {activity.description}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card.Body>
-          </Card>
+            {/* Historial de Likes */}
+            <Col xs={12}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <TeacherLikesHistoryTabs
+                  teacherId={teacher._id || teacher.id}
+                  darkMode={darkMode}
+                  onLikeAdded={likesHistoryRef}
+                />
+              </motion.div>
+            </Col>
+          </Row>
         </Col>
       </Row>
+
+      {/* Reutilizar el EditProfileModal */}
+      <EditProfileModal
+        show={showEditModal}
+        onHide={() => setShowEditModal(false)}
+        teacher={teacher}
+        onUpdate={(updatedTeacher) => {
+          queryClient.setQueryData(['teacher', id], (old) => ({
+            ...old,
+            ...updatedTeacher
+          }));
+        }}
+        darkMode={darkMode}
+      />
     </Container>
   );
 };
+
+// Componentes auxiliares
+const InfoItem = ({ icon, label, value }) => (
+  <div className="info-item">
+    <span className="info-icon">{icon}</span>
+    <div className="info-content">
+      <small className="info-label">{label}</small>
+      <span className="info-value">{value}</span>
+    </div>
+  </div>
+);
+
+const StatItem = ({ icon, value, label, color }) => (
+  <div className={`stat-item stat-${color}`}>
+    <div className="stat-icon">{icon}</div>
+    <div className="stat-value">{value}</div>
+    <div className="stat-label">{label}</div>
+  </div>
+);
 
 export default TeacherProfile;

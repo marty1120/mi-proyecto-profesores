@@ -1,3 +1,4 @@
+// src/components/CreateGroupModal.jsx
 import React, { useState } from 'react';
 import { Modal, Form, Button, Alert, Badge } from 'react-bootstrap';
 import { FaTimes } from 'react-icons/fa';
@@ -24,7 +25,7 @@ const CreateGroupModal = ({ show, onHide, onSubmit, departments }) => {
     onSubmit({
       ...formData,
       creator: user?.name || 'Usuario',
-      members: 1,
+      members: 1, // Número inicial de miembros
       status: 'active'
     });
 

@@ -104,6 +104,32 @@
   .search-input:focus {
     box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
   }
+
+  .project-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  }
+  
+  .dark-mode .project-card {
+    background: var(--card-bg-dark);
+    border-color: rgba(255,255,255,0.1);
+  }
+  
+  .dark-mode .project-card:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  }
+  
+  .member-badge {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+  }
   
   /* Botón de crear grupo */
   .create-group-btn {

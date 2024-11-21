@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth;
+namespace App\Providers;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;

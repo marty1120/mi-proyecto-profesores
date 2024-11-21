@@ -21,45 +21,59 @@ const Login = () => {
       await login({ email, password });
       navigate('/');
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.message || 'Error al iniciar sesión');
+      setError(err.message || 'Error al iniciar sesión');
+      // No redireccionar en caso de error
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+    <Container
+      className="d-flex justify-content-center align-items-center"
+      style={{ minHeight: '80vh' }}
+    >
       <Card style={{ width: '400px' }}>
         <Card.Body>
           <h2 className="text-center mb-4">Iniciar Sesión</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label><FaUser className="me-2" />Email</Form.Label>
+              <Form.Label>
+                <FaUser className="me-2" />Email
+              </Form.Label>
               <Form.Control
                 type="email"
                 placeholder="admin@iesalandalus.org"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={isLoading}
+                name="email"
+                data-testid="email-input" // Añadido data-testid para cypress
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label><FaLock className="me-2" />Contraseña</Form.Label>
+              <Form.Label>
+                <FaLock className="me-2" />Contraseña
+              </Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Introduce tu contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={isLoading}
+                name="password"
+                data-testid="password-input" // Añadido data-testid para cypress
               />
             </Form.Group>
-            <Button 
-              variant="primary" 
-              type="submit" 
+            <Button
+              variant="primary"
+              type="submit"
               className="w-100"
               disabled={isLoading}
+              data-testid="login-button" // Añadido data-testid para cypress
             >
               {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>

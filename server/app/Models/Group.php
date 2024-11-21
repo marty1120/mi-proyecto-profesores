@@ -2,71 +2,145 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Jenssegers\Mongodb\Eloquent\Model as MongoModel;
+use MongoDB\Laravel\Eloquent\Model;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\BSON\ObjectId;
 
-class Group extends MongoModel
+class Group extends Model
 {
     protected $connection = 'mongodb';
     protected $collection = 'grupos';
+    protected $primaryKey = '_id';
+    public $incrementing = false;
 
     protected $fillable = [
         'name',
         'description',
+        'department',
         'creator_id',
         'tags',
-        'department',
         'is_active',
-        'max_members'
+        'members',
     ];
 
     protected $casts = [
+        'is_active' => 'boolean',
         'tags' => 'array',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'members' => 'array',
     ];
 
-    // Relación con los miembros del grupo
-    public function members()
+    protected static function boot()
     {
-        return $this->belongsToMany(Teacher::class, null, 'group_ids', 'member_ids')
-            ->withTimestamps()
-            ->withPivot('role'); // 'admin' o 'member'
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->members)) {
+                $model->members = [];
+            }
+            if (empty($model->tags)) {
+                $model->tags = [];
+            }
+            if (!isset($model->is_active)) {
+                $model->is_active = true;
+            }
+            if (empty($model->created_at)) {
+                $model->created_at = new UTCDateTime(round(microtime(true) * 1000));
+            }
+            if (empty($model->updated_at)) {
+                $model->updated_at = new UTCDateTime(round(microtime(true) * 1000));
+            }
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = new UTCDateTime(round(microtime(true) * 1000));
+        });
     }
 
-    // Relación con los mensajes del grupo
-    public function messages()
+    public function toArray()
     {
-        return $this->hasMany(Message::class);
+        $array = parent::toArray();
+        $array['id'] = (string) $this->_id;
+        return $array;
     }
 
-    // Métodos de utilidad
-    public function addMember(Teacher $teacher, $role = 'member')
+    public function isMember($userId)
     {
-        if (!$this->members()->where('_id', $teacher->_id)->exists()) {
-            $this->members()->attach($teacher->_id, ['role' => $role]);
+        if (!is_array($this->members)) {
+            return false;
+        }
+
+        $userId = (string)$userId;
+        return collect($this->members)->contains(function ($member) use ($userId) {
+            return (string)($member['id'] ?? '') === $userId;
+        });
+    }
+
+    public function isAdmin($user)
+    {
+        // Verificar si el usuario es administrador global
+        if (isset($user['is_global_admin']) && $user['is_global_admin'] === true) {
             return true;
         }
-        return false;
+
+        if (!is_array($this->members)) {
+            return false;
+        }
+
+        $userId = (string)$user['id'];
+
+        return collect($this->members)
+            ->contains(function ($member) use ($userId) {
+                return (string)($member['id'] ?? '') === $userId && ($member['role'] ?? 'member') === 'admin';
+            });
     }
 
-    public function removeMember(Teacher $teacher)
+    public function getMemberRole($userId)
     {
-        return $this->members()->detach($teacher->_id);
+        if (!is_array($this->members)) {
+            return null;
+        }
+
+        $userId = (string)$userId;
+
+        $member = collect($this->members)
+            ->first(function ($member) use ($userId) {
+                return (string)($member['id'] ?? '') === $userId;
+            });
+
+        return $member['role'] ?? null;
     }
 
-    public function isAdmin(Teacher $teacher)
+    public function addMember($user, $role = 'member')
     {
-        return $this->members()
-            ->where('_id', $teacher->_id)
-            ->wherePivot('role', 'admin')
-            ->exists();
+        if ($this->isMember($user['id'])) {
+            return false;
+        }
+
+        $this->members[] = [
+            'id' => (string)$user['id'],
+            'name' => $user['nombre'],
+            'department' => $user['departamento'],
+            'role' => $role
+        ];
+
+        return $this->save();
     }
 
-    public function isMember(Teacher $teacher)
+    public function removeMember($userId)
     {
-        return $this->members()
-            ->where('_id', $teacher->_id)
-            ->exists();
+        if (!is_array($this->members)) {
+            return false;
+        }
+
+        $userId = (string)$userId;
+
+        $this->members = collect($this->members)
+            ->reject(function ($member) use ($userId) {
+                return (string)($member['id'] ?? '') === $userId;
+            })
+            ->values()
+            ->all();
+
+        return $this->save();
     }
 }

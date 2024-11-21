@@ -2,10 +2,11 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8000/api',
-  withCredentials: true,  // cookies de CSRF
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
+    'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
   }
 });
 
@@ -22,9 +23,18 @@ instance.interceptors.request.use(
   }
 );
 
+
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
 instance.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';

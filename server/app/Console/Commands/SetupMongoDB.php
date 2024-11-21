@@ -50,12 +50,14 @@ class SetupMongoDB extends Command
                 // Índice para búsqueda por departamento
                 $database->profesores->createIndex(['departamento' => 1]);
 
-                // Índices para likes
-                $database->likes->createIndex([
-                    'profesor_id' => 1,
-                    'dado_por_id' => 1,
-                    'tipo_like' => 1
-                ], ['unique' => true]);
+                // Índice único en 'likes' para evitar duplicados en teacher_id y given_by_id
+                $database->likes->createIndex(
+                    [
+                        'teacher_id' => 1,
+                        'given_by_id' => 1
+                    ],
+                    ['unique' => true]
+                );
 
                 // Índices para grupos
                 $database->grupos->createIndex(['nombre' => 1]);

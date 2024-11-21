@@ -1,17 +1,28 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+// AuthContext.js
+import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { login, logout, getCurrentUser } from '../services/authService';
+import PropTypes from 'prop-types';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);      // Estado del usuario autenticado
+  const [loading, setLoading] = useState(true); // Estado de carga de la autenticación
+  const queryClient = useQueryClient();        // Cliente de React Query
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  // Función para limpiar la sesión
+  const cleanupSession = useCallback(() => {
+    setUser(null);
+    // Limpiar todo el caché de React Query
+    queryClient.clear();
+    // Limpiar localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }, [queryClient]);
 
-  const checkAuth = async () => {
+  // Verificar la autenticación al montar el componente
+  const checkAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -23,47 +34,60 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
     } catch (error) {
       console.error('Error checking auth:', error);
-      localStorage.removeItem('token');
-      setUser(null);
+      cleanupSession();
     } finally {
       setLoading(false);
     }
-  };
+  }, [cleanupSession]);
 
-  const loginUser = async (credentials) => {
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  // Función para iniciar sesión
+  const loginUser = useCallback(async (credentials) => {
     try {
       const response = await login(credentials);
       setUser(response.user);
+      // Almacenar token y datos del usuario en localStorage
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
       return true;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
     }
-  };
+  }, []);
 
-  const logoutUser = async () => {
+  // Función para cerrar sesión
+  const logoutUser = useCallback(async () => {
     try {
       await logout();
-      setUser(null);
     } catch (error) {
       console.error('Logout error:', error);
-      throw error;
+    } finally {
+      cleanupSession();
     }
-  };
+  }, [cleanupSession]);
+
+  // Memorizar el valor del contexto para evitar renderizados innecesarios
+  const value = useMemo(() => ({
+    user,
+    loading,
+    login: loginUser,
+    logout: logoutUser,
+    isAuthenticated: !!user,
+  }), [user, loading, loginUser, logoutUser]);
 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        loading,
-        login: loginUser,
-        logout: logoutUser,
-        isAuthenticated: !!user
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useAuth = () => {

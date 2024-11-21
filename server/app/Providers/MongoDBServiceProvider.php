@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Providers\MongoDBUserProvider;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\MongoDBUserProvider;
 
 class MongoDBServiceProvider extends ServiceProvider
 {
