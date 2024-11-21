@@ -1,0 +1,400 @@
+/* Contenedor principal */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+  position: relative;
+  min-height: 400px;
+}
+
+.card-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Estilos base de la tarjeta */
+.fifa-style-card {
+  background-color: var(--card-bg-light);
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark-mode .fifa-style-card {
+  background-color: var(--card-bg-dark);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos de texto base */
+.fifa-style-card .card-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.fifa-style-card .card-subtitle {
+  font-size: 1rem;
+  color: #666666;
+  margin-bottom: 0.5rem;
+}
+
+.dark-mode .fifa-style-card .card-title {
+  color: #ffffff;
+}
+
+.dark-mode .fifa-style-card .card-subtitle {
+  color: #aaaaaa;
+}
+
+/* Estilos especiales para los top 3 */
+.fifa-style-card.rank-1 {
+  background: linear-gradient(145deg, var(--card-bg-light), #ffd700);
+  border: 2px solid #ffd700;
+  z-index: 3;
+  animation: shine-gold 4s infinite alternate;
+}
+
+.fifa-style-card.rank-2 {
+  background: linear-gradient(145deg, var(--card-bg-light), #c0c0c0);
+  border: 2px solid #c0c0c0;
+  z-index: 2;
+  animation: shine-silver 4s infinite alternate;
+}
+
+.fifa-style-card.rank-3 {
+  background: linear-gradient(145deg, var(--card-bg-light), #cd7f32);
+  border: 2px solid #cd7f32;
+  z-index: 1;
+  animation: shine-bronze 4s infinite alternate;
+}
+
+/* Medalla de ranking */
+.rank-medal {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  border: 2px solid #fff;
+  will-change: transform;
+}
+
+.rank-1 .rank-medal {
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  animation: floating 3s ease-in-out infinite;
+}
+
+.rank-2 .rank-medal {
+  background: linear-gradient(135deg, #c0c0c0, #a9a9a9);
+  animation: floating 3s ease-in-out infinite 0.2s;
+}
+
+.rank-3 .rank-medal {
+  background: linear-gradient(135deg, #cd7f32, #8b4513);
+  animation: floating 3s ease-in-out infinite 0.4s;
+}
+
+/* Estilos para los iconos de trofeo */
+.rank-medal .rank-icon {
+  font-size: 1.6rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  will-change: transform;
+  animation: rotate-trophy 6s ease-in-out infinite;
+}
+
+/* Ajuste específico para números de ranking */
+.fifa-style-card:not(.rank-1):not(.rank-2):not(.rank-3) .rank-medal {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #fff;
+  animation: pulse-subtle 2s infinite;
+}
+
+.fifa-style-card:not(.rank-1):not(.rank-2):not(.rank-3) .rank-medal span {
+  font-size: 1.4rem;
+}
+
+/* Imagen y contenido */
+.fifa-style-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  margin: 0;
+  display: block;
+  width: 100%;
+  will-change: transform;
+  transition: transform 0.3s ease;
+}
+
+/* Cuerpo de la tarjeta */
+.fifa-style-card .card-body {
+  padding: 1.25rem;
+}
+
+/* Contenedor de estadísticas */
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  will-change: transform;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Estilos para el contenedor del correo electrónico */
+.email-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.dark-mode .email-container {
+  color: #ccc;
+}
+
+.email-icon {
+  margin-right: 0.5rem;
+  color: var(--primary-color);
+}
+
+.email-text {
+  word-break: break-all;
+}
+
+/* Animaciones */
+@keyframes floating {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-5px) rotate(5deg); }
+}
+
+@keyframes rotate-trophy {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-15deg); }
+  75% { transform: rotate(15deg); }
+}
+
+@keyframes shine-gold {
+  0% { 
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    filter: brightness(1);
+  }
+  100% { 
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes shine-silver {
+  0% { 
+    box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    filter: brightness(1);
+  }
+  100% { 
+    box-shadow: 0 0 30px rgba(192, 192, 192, 0.8);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes shine-bronze {
+  0% { 
+    box-shadow: 0 0 10px rgba(205, 127, 50, 0.5);
+    filter: brightness(1);
+  }
+  100% { 
+    box-shadow: 0 0 30px rgba(205, 127, 50, 0.8);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes pulse-subtle {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Mejoras en las animaciones de las tarjetas */
+.fifa-style-card {
+  position: relative;
+  will-change: transform;
+  transform-origin: center center;
+  transition: none; /* Removemos la transición base para usar Framer Motion */
+}
+
+/* Animaciones para los top 3 */
+.rank-1 .rank-medal {
+  animation: floatGold 3s ease-in-out infinite;
+}
+
+.rank-2 .rank-medal {
+  animation: floatSilver 3s ease-in-out infinite;
+}
+
+.rank-3 .rank-medal {
+  animation: floatBronze 3s ease-in-out infinite;
+}
+
+@keyframes floatGold {
+  0%, 100% { transform: translateY(0) rotate(0); filter: brightness(1); }
+  50% { transform: translateY(-5px) rotate(5deg); filter: brightness(1.2); }
+}
+
+@keyframes floatSilver {
+  0%, 100% { transform: translateY(0) rotate(0); filter: brightness(1); }
+  50% { transform: translateY(-4px) rotate(-5deg); filter: brightness(1.1); }
+}
+
+@keyframes floatBronze {
+  0%, 100% { transform: translateY(0) rotate(0); filter: brightness(1); }
+  50% { transform: translateY(-3px) rotate(3deg); filter: brightness(1.05); }
+}
+
+/* Optimizaciones para el rendimiento */
+.card-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.card-img-top {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition: transform 0.3s ease;
+}
+
+.fifa-style-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+/* Mejoras en el contador de likes */
+.likes-count span {
+  display: inline-block;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* Mejora en la medalla de ranking */
+.rank-medal {
+  z-index: 10;
+  transform-origin: center center;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Ajustes para el modo oscuro */
+.dark-mode .fifa-style-card {
+  background: var(--card-bg-dark);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .fifa-style-card:hover {
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Efectos hover mejorados */
+.fifa-style-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .fifa-style-card:hover {
+  box-shadow: 0 15px 25px rgba(255, 255, 255, 0.1);
+}
+
+.fifa-style-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.fifa-style-card:hover .rank-medal {
+  transform: rotate(15deg);
+}
+
+/* Ajustes para el sistema de likes */
+.like-system {
+  position: relative;
+  z-index: 2;
+}
+
+.like-button {
+  will-change: transform;
+}
+
+/* Optimizaciones de rendimiento */
+.fifa-style-card,
+.rank-medal,
+.card-img-top {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 576px) {
+  .fifa-style-card .card-body {
+    padding: 0.75rem;
+  }
+  
+  .fifa-style-card .card-title {
+    font-size: 1rem;
+  }
+  
+  .fifa-style-card .card-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .rank-medal {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Estilos de animación para el contenedor principal */
+.teacher-list-container {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimizaciones para dispositivos de alto rendimiento */
+@media (prefers-reduced-motion: no-preference) {
+  .fifa-style-card {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Ajustes para dispositivos de bajo rendimiento */
+@media (prefers-reduced-motion: reduce) {
+  .fifa-style-card,
+  .rank-medal,
+  .rank-icon {
+    animation: none !important;
+    transition: none !important;
+  }
+}

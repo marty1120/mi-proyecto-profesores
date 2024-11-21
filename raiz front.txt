@@ -1,0 +1,32 @@
+/proyecto/
+│
+├── public/
+│   ├── logo.png
+│   └── placeholder-teacher.jpg
+│
+├── src/
+│   ├── components/
+│   │   ├── FIFAStyleCard.js
+│   │   ├── Navbar.js
+│   │   ├── TeacherCard.js
+│   │   └── TeacherList.js
+│   │
+│   ├── context/
+│   │   └── ThemeContext.js
+│   │
+│   ├── pages/
+│   │   └── Login.js
+│   │
+│   ├── services/
+│   │   └── teacherService.js
+│   │
+│   ├── styles/
+│   │   ├── FIFAStyleCard.css
+│   │   ├── TeacherList.css
+│   │   └── styles.css
+│   │
+│   ├── App.js
+│   └── index.js
+│
+├── package.json
+└── README.md

@@ -1,0 +1,201 @@
+/* Estilos base del modal */
+.teacher-modal .modal-content {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  /* Header del modal */
+  .teacher-modal .modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .teacher-modal .modal-title {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .rank-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Cuerpo del modal */
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  /* Estilos de imagen */
+  .teacher-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .teacher-image:hover {
+    transform: scale(1.02);
+  }
+  
+  .default-avatar-container {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+  
+  /* Tarjeta de información */
+  .info-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+  
+  .info-item {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  
+  .info-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transform: translateX(5px);
+  }
+  
+  /* Modo Oscuro */
+  .dark-mode .modal-content {
+    background-color: #1a1a1a;
+    color: #fff;
+  }
+  
+  .dark-mode .modal-header {
+    background-color: #1a1a1a;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark-mode .info-card {
+    background-color: #2d2d2d;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark-mode .info-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Estilos del botón de cerrar */
+  .modal-header .btn-close {
+    opacity: 0.8;
+    transition: all 0.2s ease;
+  }
+  
+  .modal-header .btn-close:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  
+  .dark-mode .modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+  }
+  
+  /* Estilos adicionales */
+  .trophy-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .modal-title:hover .trophy-icon {
+    transform: rotate(15deg);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .teacher-profile .row {
+      flex-direction: column;
+    }
+  
+    .teacher-image,
+    .default-avatar-container {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 1.5rem;
+    }
+  
+    .modal-title {
+      font-size: 1.2rem;
+    }
+  
+    .rank-badge {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* Animaciones */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .teacher-profile {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+  
+  /* Efectos de hover mejorados */
+  .info-item {
+    cursor: pointer;
+  }
+  
+  .info-item:active {
+    transform: scale(0.98);
+  }
+  
+  /* Tooltips y elementos interactivos */
+  .info-item {
+    position: relative;
+  }
+  
+  .info-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  
+  .info-item:hover::after {
+    opacity: 1;
+  }

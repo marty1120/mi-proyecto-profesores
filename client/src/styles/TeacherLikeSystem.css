@@ -1,0 +1,80 @@
+.like-system-container {
+    width: 100%;
+  }
+  
+  .like-system-container .btn {
+    transition: all 0.3s ease;
+  }
+  
+  .like-system-container .btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Estilos para el modal de likes */
+  .modal-content {
+    border-radius: 15px;
+    border: none;
+  }
+  
+  .dark-mode .modal-content {
+    background-color: var(--card-bg-dark);
+    color: var(--text-dark);
+  }
+  
+  /* Estilos para las tarjetas de historial */
+  .like-history-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+  }
+  
+  .dark-mode .like-history-card {
+    background-color: var(--card-bg-dark);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .like-history-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  .like-type-badge {
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  
+  /* Estilos para el formulario */
+  .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb), 0.25);
+  }
+  
+  .dark-mode .form-control {
+    background-color: var(--input-bg-dark);
+    border-color: rgba(255,255,255,0.1);
+    color: var(--text-dark);
+  }
+  
+  .dark-mode .form-control:focus {
+    background-color: var(--input-bg-dark);
+    border-color: var(--primary-color);
+    color: var(--text-dark);
+  }
+  
+  /* Animaciones */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .like-history-card {
+    animation: slideIn 0.3s ease forwards;
+  }

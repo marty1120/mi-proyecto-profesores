@@ -8,17 +8,17 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
-     * Define the application's command schedule.
+     * Define la programación de comandos de la aplicación.
      */
-    protected function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
     }
 
     /**
-     * Register the commands for the application.
+     * Registra los comandos para la aplicación.
      */
-    protected function commands(): void
+    protected function commands()
     {
         $this->load(__DIR__.'/Commands');
 
