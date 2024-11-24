@@ -140,28 +140,34 @@ class AdminLikeController extends Controller
             if (!preg_match('/^[0-9a-fA-F]{24}$/', $id)) {
                 return response()->json(['message' => 'ID de like inválido'], 400);
             }
-
+    
             // Primero obtener el like para saber a qué profesor pertenece
             $like = $this->likesCollection->findOne(['_id' => new ObjectId($id)]);
             
             if (!$like) {
                 return response()->json(['message' => 'Like no encontrado'], 404);
             }
-
+    
+            // Eliminar el like
             $result = $this->likesCollection->deleteOne(['_id' => new ObjectId($id)]);
-
+    
             if ($result->getDeletedCount() === 0) {
                 return response()->json(['message' => 'Error al eliminar el like'], 500);
             }
-
-            // Actualizar el contador de likes del profesor
+    
+            // Obtener el nuevo total de likes para este profesor
+            $newLikeCount = $this->likesCollection->countDocuments([
+                'teacher_id' => $like->teacher_id
+            ]);
+    
+            // Actualizar el contador en el documento del profesor
             $this->teachersCollection->updateOne(
                 ['_id' => $like->teacher_id],
-                ['$inc' => ['contador_likes' => -1]]
+                ['$set' => ['contador_likes' => $newLikeCount]]
             );
-
+    
             return response()->json(['message' => 'Like eliminado correctamente']);
-
+    
         } catch (\Exception $e) {
             Log::error('Error al eliminar like: ' . $e->getMessage());
             return response()->json(['message' => 'Error al eliminar el like'], 500);

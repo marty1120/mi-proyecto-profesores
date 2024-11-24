@@ -1,32 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useForm } from 'react-hook-form';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+// Componente de Login optimizado
+const Login = React.memo(() => {
+  // Uso de react-hook-form para manejar el formulario
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  // Estado para manejar errores del servidor y carga
+  const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Hooks de navegación y autenticación
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+  // Función para manejar el envío del formulario
+  const onSubmit = useCallback(
+    async (data) => {
+      setServerError('');
+      setIsLoading(true);
 
-    try {
-      await login({ email, password });
-      navigate('/');
-    } catch (err) {
-      setError(err.message || 'Error al iniciar sesión');
-      // No redireccionar en caso de error
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      try {
+        await login(data);
+        navigate('/');
+      } catch (err) {
+        setServerError(err.message || 'Error al iniciar sesión');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [login, navigate]
+  );
 
   return (
     <Container
@@ -36,44 +44,49 @@ const Login = () => {
       <Card style={{ width: '400px' }}>
         <Card.Body>
           <h2 className="text-center mb-4">Iniciar Sesión</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={handleSubmit}>
+          {serverError && <Alert variant="danger">{serverError}</Alert>}
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            {/* Campo de Email */}
             <Form.Group className="mb-3">
               <Form.Label>
                 <FaUser className="me-2" />Email
               </Form.Label>
               <Form.Control
                 type="email"
-                placeholder="admin@iesalandalus.org"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                {...register('email', { required: 'El email es obligatorio' })}
+                isInvalid={errors.email}
                 disabled={isLoading}
                 name="email"
-                data-testid="email-input" // Añadido data-testid para cypress
+                data-testid="email-input"
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.email?.message}
+              </Form.Control.Feedback>
             </Form.Group>
+            {/* Campo de Contraseña */}
             <Form.Group className="mb-3">
               <Form.Label>
                 <FaLock className="me-2" />Contraseña
               </Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Introduce tu contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                {...register('password', { required: 'La contraseña es obligatoria' })}
+                isInvalid={errors.password}
                 disabled={isLoading}
                 name="password"
-                data-testid="password-input" // Añadido data-testid para cypress
+                data-testid="password-input"
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.password?.message}
+              </Form.Control.Feedback>
             </Form.Group>
+            {/* Botón de Envío */}
             <Button
               variant="primary"
               type="submit"
               className="w-100"
               disabled={isLoading}
-              data-testid="login-button" // Añadido data-testid para cypress
+              data-testid="login-button"
             >
               {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
@@ -82,6 +95,6 @@ const Login = () => {
       </Card>
     </Container>
   );
-};
+});
 
 export default Login;

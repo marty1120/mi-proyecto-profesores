@@ -64,51 +64,50 @@ class Group extends Model
     }
 
     public function isMember($userId)
-    {
-        if (!is_array($this->members)) {
-            return false;
-        }
+{
+    if (!is_array($this->members)) {
+        return false;
+    }
 
-        $userId = (string)$userId;
-        return collect($this->members)->contains(function ($member) use ($userId) {
+    $userId = (string)$userId;
+    return collect($this->members)->contains(function ($member) use ($userId) {
+        return (string)($member['id'] ?? '') === $userId;
+    });
+}
+
+public function getMemberRole($userId)
+{
+    if (!is_array($this->members)) {
+        return null;
+    }
+
+    $userId = (string)$userId;
+    $member = collect($this->members)
+        ->first(function ($member) use ($userId) {
             return (string)($member['id'] ?? '') === $userId;
         });
+
+    return $member['role'] ?? null;
+}
+
+public function isAdmin($user)
+{
+    // Si el usuario es administrador global
+    if (isset($user['rol']) && $user['rol'] === 'administrador') {
+        return true;
     }
 
-    public function isAdmin($user)
-    {
-        // Verificar si el usuario es administrador global
-        if (isset($user['is_global_admin']) && $user['is_global_admin'] === true) {
-            return true;
-        }
-
-        if (!is_array($this->members)) {
-            return false;
-        }
-
-        $userId = (string)$user['id'];
-
-        return collect($this->members)
-            ->contains(function ($member) use ($userId) {
-                return (string)($member['id'] ?? '') === $userId && ($member['role'] ?? 'member') === 'admin';
-            });
+    if (!is_array($this->members)) {
+        return false;
     }
 
-    public function getMemberRole($userId)
-    {
-        if (!is_array($this->members)) {
-            return null;
-        }
-
-        $userId = (string)$userId;
-
-        $member = collect($this->members)
-            ->first(function ($member) use ($userId) {
-                return (string)($member['id'] ?? '') === $userId;
-            });
-
-        return $member['role'] ?? null;
-    }
+    $userId = (string)$user['id'];
+    return collect($this->members)
+        ->contains(function ($member) use ($userId) {
+            return (string)($member['id'] ?? '') === $userId && 
+                   ($member['role'] ?? '') === 'admin';
+        });
+}
 
     public function addMember($user, $role = 'member')
     {

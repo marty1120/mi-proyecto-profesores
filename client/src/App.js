@@ -10,7 +10,7 @@ import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import LoadingSpinner from './components/LoadingSpinner';
-
+import './styles/fix-tema-oscuro.css';
 // Lazy loading de componentes
 const TeacherList = lazy(() => import('./components/TeacherList'));
 const TeacherProfile = lazy(() => import('./components/TeacherProfile'));

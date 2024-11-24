@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useSpring, animated } from '@react-spring/web';
 import { FaChartLine, FaTrophy, FaEnvelope } from 'react-icons/fa';
 import TeacherLikeSystem from './TeacherLikeSystem';
@@ -11,31 +12,29 @@ const TeacherRankCard = ({
   initialRank,
   onLikeSuccess,
   darkMode,
-  onClick
+  onClick,
+  isMoving 
 }) => {
   const [rank, setRank] = useState(initialRank);
-  const [isMoving, setIsMoving] = useState(false);
   const [imageError, setImageError] = useState(false);
   const defaultAvatar = "/assets/default-fifa-avatar.png";
 
   useEffect(() => {
-    if (initialRank !== rank) {
-      setIsMoving(true);
-      setRank(initialRank);
-      const timer = setTimeout(() => setIsMoving(false), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [initialRank, rank]);
+    setRank(initialRank);
+  }, [initialRank]);
 
-  const glowAnimation = useSpring({
-    from: { boxShadow: '0 0 0px rgba(74, 144, 226, 0)' },
-    to: async (next) => {
-      if (isMoving) {
-        await next({ boxShadow: '0 0 30px rgba(74, 144, 226, 0.6)' });
-        await next({ boxShadow: '0 0 0px rgba(74, 144, 226, 0)' });
-      }
-    },
-    config: { tension: 200, friction: 20 }
+  // Animación de la tarjeta cuando cambia de posición
+  const cardSpring = useSpring({
+    transform: isMoving ? 'scale(1.05)' : 'scale(1)',
+    boxShadow: isMoving 
+      ? '0 20px 40px rgba(0,0,0,0.2)' 
+      : '0 5px 15px rgba(0,0,0,0.1)',
+    zIndex: isMoving ? 999 : 1,
+    config: { 
+      tension: 300, 
+      friction: 20,
+      mass: 1
+    }
   });
 
   const getRankIcon = () => {
@@ -52,47 +51,38 @@ const TeacherRankCard = ({
   };
 
   const getTeacherEmail = () => {
-    if (teacher && teacher.email) {
+    if (teacher?.email) {
       return teacher.email;
     }
     return 'Email no disponible';
   };
 
   const getTeacherImage = () => {
-    console.log("teacher.foto:", teacher.foto); // Comprobación de URL en la consola
     if (imageError || !teacher.foto) {
-        return defaultAvatar;
+      return defaultAvatar;
     }
     return teacher.foto;
-};
-
+  };
 
   return (
-    <animated.div style={glowAnimation}>
+    <animated.div style={cardSpring}>
       <motion.div
         layout
         className={`fifa-style-card rank-${rank} ${darkMode ? 'dark-mode' : ''}`}
         onClick={onClick}
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ 
-          scale: 1, 
-          opacity: 1,
-          transition: {
-            type: "spring",
-            stiffness: 300,
-            damping: 25
-          }
-        }}
+        initial={false}
+        animate={isMoving ? {
+          scale: [1, 1.05, 1],
+          transition: { duration: 0.3 }
+        } : {}}
         whileHover={{ scale: 1.02 }}
-        transition={{ 
-          type: "spring",
-          stiffness: 400,
-          damping: 17
-        }}
       >
         <motion.div
           className="rank-medal"
-          layout
+          animate={isMoving ? {
+            scale: [1, 1.2, 1],
+            rotate: [0, -10, 10, 0]
+          } : {}}
           transition={{
             type: "spring",
             stiffness: 300,
@@ -140,10 +130,10 @@ const TeacherRankCard = ({
               </div>
               <motion.div 
                 className="stat-item likes-count"
-                layout
-                initial={false}
-                animate={isMoving ? { scale: [1, 1.2, 1] } : {}}
-                transition={{ duration: 0.3 }}
+                animate={isMoving ? {
+                  scale: [1, 1.2, 1],
+                  transition: { duration: 0.3 }
+                } : {}}
               >
                 <span>{teacher.contador_likes || 0}</span>
                 <small>Likes</small>
@@ -165,4 +155,35 @@ const TeacherRankCard = ({
   );
 };
 
-export default React.memo(TeacherRankCard);
+TeacherRankCard.propTypes = {
+  teacher: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    nombre: PropTypes.string.isRequired,
+    email: PropTypes.string,
+    departamento: PropTypes.string,
+    foto: PropTypes.string,
+    año_llegada: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    contador_likes: PropTypes.number
+  }).isRequired,
+  initialRank: PropTypes.number.isRequired,
+  onLikeSuccess: PropTypes.func.isRequired,
+  darkMode: PropTypes.bool,
+  onClick: PropTypes.func.isRequired,
+  isMoving: PropTypes.bool
+};
+
+TeacherRankCard.defaultProps = {
+  darkMode: false,
+  isMoving: false
+};
+
+export default React.memo(TeacherRankCard, (prevProps, nextProps) => {
+  return (
+    prevProps.teacher.id === nextProps.teacher.id &&
+    prevProps.initialRank === nextProps.initialRank &&
+    prevProps.teacher.contador_likes === nextProps.teacher.contador_likes &&
+    prevProps.darkMode === nextProps.darkMode &&
+    prevProps.isMoving === nextProps.isMoving
+  );
+});

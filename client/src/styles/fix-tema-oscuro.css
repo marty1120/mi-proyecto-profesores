@@ -1,0 +1,191 @@
+/* ========== CORRECCIONES MODO OSCURO ========== */
+
+/* 1. Fix para las tarjetas de ranking - colores claros por defecto */
+.fifa-style-card.rank-1 {
+  background: linear-gradient(145deg, var(--card-bg-light), #ffd700) !important;
+}
+
+.fifa-style-card.rank-2 {
+  background: linear-gradient(145deg, var(--card-bg-light), #c0c0c0) !important;
+}
+
+.fifa-style-card.rank-3 {
+  background: linear-gradient(145deg, var(--card-bg-light), #cd7f32) !important;
+}
+
+/* Colores específicos para modo oscuro */
+.dark-mode .fifa-style-card.rank-1 {
+  background: #ffeeb7 !important;
+}
+
+.dark-mode .fifa-style-card.rank-2 {
+  background: #e6e6e6 !important;
+}
+
+.dark-mode .fifa-style-card.rank-3 {
+  background: #ffdbc3 !important;
+}
+
+/* Mantener nombres, departamentos, año de llegada y likes legibles */
+.fifa-style-card.rank-1 .card-title,
+.fifa-style-card.rank-1 .card-subtitle,
+.fifa-style-card.rank-1 .año-llegada,
+.fifa-style-card.rank-1 .likes-count,
+.fifa-style-card.rank-2 .card-title,
+.fifa-style-card.rank-2 .card-subtitle,
+.fifa-style-card.rank-2 .año-llegada,
+.fifa-style-card.rank-2 .likes-count,
+.fifa-style-card.rank-3 .card-title,
+.fifa-style-card.rank-3 .card-subtitle,
+.fifa-style-card.rank-3 .año-llegada,
+.fifa-style-card.rank-3 .likes-count {
+  color: #2c3e50 !important;
+}
+
+/* Corrección específica para años de llegada y likes en las tarjetas top 3 */
+.fifa-style-card.rank-1 small,
+.fifa-style-card.rank-2 small,
+.fifa-style-card.rank-3 small,
+.fifa-style-card.rank-1 .año-llegada,
+.fifa-style-card.rank-2 .año-llegada,
+.fifa-style-card.rank-3 .año-llegada {
+  color: #2c3e50 !important;
+}
+
+/* Corrección específica para los textos "Año de llegada" y "Likes" */
+.fifa-style-card.rank-1 .año-text,
+.fifa-style-card.rank-1 .likes-text,
+.fifa-style-card.rank-2 .año-text,
+.fifa-style-card.rank-2 .likes-text,
+.fifa-style-card.rank-3 .año-text,
+.fifa-style-card.rank-3 .likes-text {
+  color: #2c3e50 !important;
+}
+
+/* Fix específico para el número del año y likes */
+.fifa-style-card.rank-1 .año-number,
+.fifa-style-card.rank-1 .likes-count,
+.fifa-style-card.rank-2 .año-number,
+.fifa-style-card.rank-2 .likes-count,
+.fifa-style-card.rank-3 .año-number,
+.fifa-style-card.rank-3 .likes-count {
+  color: #2c3e50 !important;
+}
+
+/* Fix específico para los trofeos - SIEMPRE blancos */
+.rank-1 .rank-medal svg,
+.rank-2 .rank-medal svg,
+.rank-3 .rank-medal svg,
+.rank-1 .rank-medal path,
+.rank-2 .rank-medal path,
+.rank-3 .rank-medal path {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Fix específico para el resto de SVGs en las tarjetas top 3 (excepto trofeos) */
+.fifa-style-card.rank-1 svg:not(.rank-medal svg),
+.fifa-style-card.rank-2 svg:not(.rank-medal svg),
+.fifa-style-card.rank-3 svg:not(.rank-medal svg) {
+  color: #2c3e50 !important;
+  fill: #2c3e50 !important;
+}
+
+/* Fix específico para el texto del año y su contenedor */
+.fifa-style-card.rank-1 div,
+.fifa-style-card.rank-1 div span,
+.fifa-style-card.rank-2 div,
+.fifa-style-card.rank-2 div span,
+.fifa-style-card.rank-3 div,
+.fifa-style-card.rank-3 div span {
+  color: #2c3e50 !important;
+}
+
+/* Colores específicos para los trofeos */
+.rank-1 .rank-medal {
+  background: linear-gradient(135deg, #ffd700, #ffa500) !important;
+  color: white !important;
+}
+
+.rank-2 .rank-medal {
+  background: linear-gradient(135deg, #c0c0c0, #a9a9a9) !important;
+  color: white !important;
+}
+
+.rank-3 .rank-medal {
+  background: linear-gradient(135deg, #cd7f32, #8b4513) !important;
+  color: white !important;
+}
+
+/* Mantener color de trofeos */
+.rank-1 .rank-medal .rank-icon,
+.rank-2 .rank-medal .rank-icon,
+.rank-3 .rank-medal .rank-icon {
+  color: white !important;
+}
+
+/* 2. Modo oscuro SOLO para tarjetas normales */
+.dark-mode .fifa-style-card:not(.rank-1):not(.rank-2):not(.rank-3) {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+.dark-mode .fifa-style-card:not(.rank-1):not(.rank-2):not(.rank-3) * {
+  color: #e0e0e0;
+}
+
+/* 3. Fix para modales en modo oscuro */
+.dark-mode .modal-content,
+.dark-mode .modal-header,
+.dark-mode .modal-body,
+.dark-mode .modal-footer {
+  background-color: #1e1e1e;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+/* 4. Fix para formularios en modo oscuro */
+.dark-mode select,
+.dark-mode .form-select,
+.dark-mode input,
+.dark-mode textarea {
+  background-color: #1e1e1e !important;
+  border-color: #404040 !important;
+  color: #e0e0e0 !important;
+}
+
+/* 5. Fix para otros componentes en modo oscuro */
+.dark-mode .card:not(.fifa-style-card) {
+  background-color: #2d2d2d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .list-group-item {
+  background-color: #2d2d2d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+/* Estilo especial para los iconos y números */
+.stats-icon,
+.stats-number {
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Fix para los iconos en modo oscuro en tarjetas normales */
+.dark-mode .fifa-style-card:not(.rank-1):not(.rank-2):not(.rank-3) .stats-icon,
+.dark-mode .fifa-style-card:not(.rank-1):not(.rank-2):not(.rank-3) .stats-number {
+  color: #e0e0e0;
+}
+
+/* Transiciones suaves */
+.modal-content,
+.form-control,
+.card,
+.list-group-item {
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
