@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000/api',
-  withCredentials: true,
+ // baseURL: 'http://localhost:8000/api', esto en local, desplegado en azure usaremos la url de abajo
+ baseURL: process.env.REACT_APP_API_URL || 'https://teacherconnect-faa3grg8g8cabgcr.westeurope-01.azurewebsites.net/api',
+ withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
