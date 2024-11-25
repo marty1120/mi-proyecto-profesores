@@ -63,4 +63,4 @@ jobs:
           app-name: 'teacherconnect'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1CDFABE96EB44422BC68929489DFC19D }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A5569CF2ECD646A7971677B80B2E9EC3 }}
