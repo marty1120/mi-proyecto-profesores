@@ -1,22 +1,34 @@
 <?php
 
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout'], // Rutas donde se aplica CORS
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout', '*'],
 
-    'allowed_methods' => ['*'], // Permite todos los métodos HTTP
+    'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        env('FRONTEND_URL', 'http://localhost:3000'), // Esto en local
-        'https://teacherconnect-faa3grg8g8cabgcr.scm.westeurope-01.azurewebsites.net/', // URL de producción
+        env('APP_URL', 'https://teacherconnect-app.azurewebsites.net'),
+        'https://teacherconnect-faa3grg8g8cabgcr.scm.westeurope-01.azurewebsites.net',
+        'https://teacherconnect-faa3grg8g8cabgcr.westeurope-01.azurewebsites.net',
+        'http://localhost:3000'
     ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '#^https?://.*\.azurewebsites\.net$#',
+    ],
 
-    'allowed_headers' => ['*'], // Permite todos los headers
+    'allowed_headers' => [
+        'X-CSRF-TOKEN',
+        'X-Requested-With',
+        'Content-Type',
+        'Origin',
+        'Authorization',
+        'Accept',
+        'X-XSRF-TOKEN'
+    ],
 
     'exposed_headers' => [],
 
     'max_age' => 0,
 
-    'supports_credentials' => true, // Necesario para cookies con credenciales
+    'supports_credentials' => true,
 ];
