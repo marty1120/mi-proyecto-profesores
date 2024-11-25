@@ -7,7 +7,7 @@ return [
 
     'allowed_origins' => [
         env('FRONTEND_URL', 'http://localhost:3000'), // Esto en local
-        'https://teacherconnect-app.azurewebsites.net', // URL de producción
+        'https://teacherconnect-faa3grg8g8cabgcr.scm.westeurope-01.azurewebsites.net/', // URL de producción
     ],
 
     'allowed_origins_patterns' => [],
